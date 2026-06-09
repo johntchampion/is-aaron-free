@@ -1,25 +1,9 @@
-import { useState, Fragment } from 'react'
+import { Fragment } from 'react'
 import { isAaronFree, getStartOfWeek, getWeekDates } from './schedule'
 import './App.css'
 
 const DAY_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const DAY_INIT = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-
-function formatFullDate(date: Date): string {
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-
-function toInputValue(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
 
 function isSameDay(a: Date, b: Date): boolean {
   return (
@@ -34,7 +18,7 @@ function isSameDay(a: Date, b: Date): boolean {
 function TodayBanner({ free, date }: { free: boolean; date: Date }) {
   return (
     <section
-      className={`today-banner ${free ? 'status-free' : 'status-working'}`}
+      className={`today-banner ${free ? 'banner-free' : 'banner-working'}`}
       role="status"
       aria-live="polite"
     >
@@ -113,49 +97,10 @@ function WeekList({ today }: { today: Date }) {
   )
 }
 
-// ── Date Picker ──────────────────────────────────────────────────────────────
-
-function DatePicker({
-  selectedDate,
-  onChange,
-}: {
-  selectedDate: Date
-  onChange: (d: Date) => void
-}) {
-  const free = isAaronFree(selectedDate)
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.value) {
-      // Append T00:00:00 to force local-time parsing (bare ISO dates parse as UTC)
-      onChange(new Date(e.target.value + 'T00:00:00'))
-    }
-  }
-
-  return (
-    <section className="picker-section">
-      <h2 className="section-label">Check any date</h2>
-      <input
-        type="date"
-        className="date-input"
-        value={toInputValue(selectedDate)}
-        onChange={handleChange}
-        min="2020-01-01"
-        max="2035-12-31"
-        aria-label="Select a date to check Aaron's schedule"
-      />
-      <div className={`picker-result ${free ? 'status-free' : 'status-working'}`}>
-        <span className="picker-date-text">{formatFullDate(selectedDate)}</span>
-        <span className="picker-verdict">{free ? 'Free' : 'Working'}</span>
-      </div>
-    </section>
-  )
-}
-
 // ── App Root ─────────────────────────────────────────────────────────────────
 
 export default function App() {
   const today = new Date()
-  const [selectedDate, setSelectedDate] = useState(today)
   const todayFree = isAaronFree(today)
 
   return (
@@ -167,10 +112,6 @@ export default function App() {
       <TodayBanner free={todayFree} date={today} />
 
       <WeekList today={today} />
-
-      <div className="picker-dock">
-        <DatePicker selectedDate={selectedDate} onChange={setSelectedDate} />
-      </div>
     </main>
   )
 }

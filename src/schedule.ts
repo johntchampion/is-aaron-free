@@ -24,16 +24,19 @@ export function isAaronFree(date: Date): boolean {
   const aSunday = startOfWeek(ANCHOR.date)
 
   const daysDiff = Math.round(
-    (qSunday.getTime() - aSunday.getTime()) / 86_400_000
+    (qSunday.getTime() - aSunday.getTime()) / 86_400_000,
   )
   const weeksDiff = daysDiff / 7
 
   // Even weeksDiff → same week type as anchor; odd → opposite type.
   const sameType = weeksDiff % 2 === 0
-  const weekTable =
-    sameType
-      ? ANCHOR.weekType === 'A' ? WEEK_A : WEEK_B
-      : ANCHOR.weekType === 'A' ? WEEK_B : WEEK_A
+  const weekTable = sameType
+    ? ANCHOR.weekType === 'A'
+      ? WEEK_A
+      : WEEK_B
+    : ANCHOR.weekType === 'A'
+      ? WEEK_B
+      : WEEK_A
 
   return !weekTable[normalizeMidnight(date).getDay()]
 }
@@ -43,7 +46,13 @@ export function getStartOfWeek(date: Date): Date {
 }
 
 export function getWeekDates(weekSunday: Date): Date[] {
-  return Array.from({ length: 7 }, (_, i) =>
-    new Date(weekSunday.getFullYear(), weekSunday.getMonth(), weekSunday.getDate() + i)
+  return Array.from(
+    { length: 7 },
+    (_, i) =>
+      new Date(
+        weekSunday.getFullYear(),
+        weekSunday.getMonth(),
+        weekSunday.getDate() + i,
+      ),
   )
 }
