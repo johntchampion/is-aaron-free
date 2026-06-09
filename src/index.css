@@ -1,55 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;700&display=swap');
 
 :root {
-  --ink: #1a1714;
-  --ink-muted: #7a736a;
-  --bg: #f5f2ed;
-  --surface: #e8e4de;
-  --border: #d0cbc3;
+    --ink: #1a1714;
+    --ink-muted: #7a736a;
+    --bg: #f5f2ed;
+    --surface: #e8e4de;
+    --border: #d0cbc3;
 
-  --free-color: #1a5c1a;
-  --free-bg: #d6f0d5;
-  --working-color: #991b1b;
-  --working-bg: #fee2e2;
+    --free-color: #1a5c1a;
+    --free-bg: #d6f0d5;
+    --working-color: #991b1b;
+    --working-bg: #fee2e2;
 
-  --mono: 'DM Mono', ui-monospace, monospace;
-  --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', ui-monospace, monospace;
+    --sans: 'DM Sans', system-ui, sans-serif;
 
-  font: 16px/1.5 var(--mono);
-  color-scheme: light dark;
-  color: var(--ink);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font: 16px/1.5 var(--mono);
+    color-scheme: light dark;
+    color: var(--ink);
+    background: var(--bg);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #f0ede8;
-    --ink-muted: #6b6460;
-    --bg: #141210;
-    --surface: #1e1b18;
-    --border: #2c2926;
+    :root {
+        --ink: #f0ede8;
+        --ink-muted: #6b6460;
+        --bg: #141210;
+        --surface: #1e1b18;
+        --border: #2c2926;
 
-    --free-color: #6fd46f;
-    --free-bg: rgba(80, 180, 80, 0.15);
-    --working-color: #f87171;
-    --working-bg: rgba(239, 68, 68, 0.15);
-  }
-}
-
-#root {
-  max-width: 480px;
-  width: 100%;
-  margin: 0 auto;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+        --free-color: #6fd46f;
+        --free-bg: rgba(80, 180, 80, 0.15);
+        --working-color: #f87171;
+        --working-bg: rgba(239, 68, 68, 0.15);
+    }
 }
 
 body {
-  margin: 0;
+    margin: 0;
 }
