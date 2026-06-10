@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;700&display=swap');
+
+:root {
+  --ink: #1a1714;
+  --ink-muted: #7a736a;
+  --bg: #f5f2ed;
+  --surface: #e8e4de;
+  --border: #d0cbc3;
+
+  --free-color: #1a5c1a;
+  --free-bg: #d6f0d5;
+  --working-color: #991b1b;
+  --working-bg: #fee2e2;
+
+  --mono: 'DM Mono', ui-monospace, monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+
+  font: 16px/1.5 var(--mono);
+  color-scheme: light dark;
+  color: var(--ink);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #f0ede8;
+    --ink-muted: #6b6460;
+    --bg: #141210;
+    --surface: #1e1b18;
+    --border: #2c2926;
+
+    --free-color: #6fd46f;
+    --free-bg: rgba(80, 180, 80, 0.15);
+    --working-color: #f87171;
+    --working-bg: rgba(239, 68, 68, 0.15);
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+
+.app {
+  padding: 16px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 40rem;
+  margin: auto;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.app-header {
+  padding: 12px 4px 4px;
+}
+
+.app-title {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ── Today Banner ───────────────────────────────────────────────────────── */
+
+.today-banner {
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.today-banner.banner-free {
+  background-color: var(--free-bg);
+  color: var(--free-color);
+}
+
+.today-banner.banner-working {
+  background-color: var(--working-bg);
+  color: var(--working-color);
+}
+
+.today-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  margin: 0;
+}
+
+.today-verdict {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 18vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 4px 0 2px;
+}
+
+.today-subtext {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* ── Week List & Month Headers ──────────────────────────────────────────── */
+
+.weeks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.month-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-top: 20px;
+  padding: 10px 0 6px;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.month-header--first {
+  margin-top: 0;
+}
+
+/* ── Week Grid ──────────────────────────────────────────────────────────── */
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.day-cell {
+  border-radius: 20px;
+  padding: 8px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 64px;
+  position: relative;
+}
+
+.day-cell.day-free {
+  background-color: var(--free-bg);
+  color: var(--free-color);
+}
+
+.day-cell.day-working {
+  background-color: var(--working-bg);
+  color: var(--working-color);
+}
+
+.day-cell.day-today {
+  border: 2px solid currentColor;
+}
+
+/* Day name: initial by default, 3-char abbreviation at ≥380px */
+.day-abbr {
+  display: none;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.day-init {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.day-num {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (min-width: 380px) {
+  .day-abbr {
+    display: block;
+  }
+
+  .day-init {
+    display: none;
+  }
+}
+
+/* ── Desktop tweaks ─────────────────────────────────────────────────────── */
+
+@media (min-width: 480px) {
+  .app {
+    padding-inline: 24px;
+    gap: 20px;
+  }
+
+  .today-banner {
+    padding: 36px 32px 28px 32px;
+  }
+}

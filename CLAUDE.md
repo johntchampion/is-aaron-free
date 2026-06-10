@@ -1,24 +1,53 @@
-# Is Aaron Free - React App
+# Is Aaron Free? — Express SSR
 
-This simple web application is meant to easily find out whether or not Aaron is free.
-
-Aaron's working schedule is a little complicated, but it can be determined with a little calendar math.
+Server-side rendered Express + EJS app that shows whether Aaron is free or working on any given day.
 
 ## Aaron's work schedule
 
-Aaron works a different schedule every week. It looks like this, and the schedule repeats indefinitely.
+Aaron's schedule alternates between two week types (A and B) indefinitely:
 
-| Sunday  | Monday  | Tuesday | Wednesday | Thursday | Friday  | Saturday |
-| ------- | ------- | ------- | --------- | -------- | ------- | -------- |
-| Free    | Working | Working | Free      | Free     | Working | Working  |
-| Working | Free    | Free    | Working   | Working  | Free    | Free     |
+| Week | Sun | Mon | Tue | Wed | Thu | Fri | Sat |
+|------|-----|-----|-----|-----|-----|-----|-----|
+| A    | Free | Working | Working | Free | Free | Working | Working |
+| B    | Working | Free | Free | Working | Working | Free | Free |
 
-You can figure out when he is working by using the last known day of the week he was free or working,
-and then you can use math to count forward to the day you want to know if Aaron is free.
+The anchor for the math is **January 10, 2026 (Saturday) = Free**, which places it in Week B. All other dates are derived by counting weeks from that anchor and alternating week types.
 
-## Requirements
+## Architecture
 
-1. The user must be able to pick a date on a calendar and see immediately whether Aaron works that day.
-2. Immediatley upon loading the page, it must be displayed whether Aaron is working today, and it should show is work schedule for this week and next week.
-3. The application should be optimized for mobile devices.
-4. The application should support light and dark mode, but that should only be styled using CSS media queries. There should be no toggle or override of the system preference in the app; use only CSS media queries to style the app light or dark.
+All schedule computation happens server-side in `schedule.ts` before the template is rendered. There is no client-side JavaScript.
+
+- **`schedule.ts`** — pure schedule logic. `isAaronFree(date)` is the core function. `buildWeekList(today)` and `buildScheduleJson(today)` produce view-ready data for the template and JSON endpoint respectively.
+- **`server.ts`** — Express app. Two routes: `GET /` renders the EJS template; `GET /schedule.json` returns a 14-day machine-readable feed.
+- **`views/index.ejs`** — EJS template. Receives pre-computed view data from the server. No logic beyond simple iteration and conditionals.
+- **`public/style.css`** — static styles. Light/dark mode via `prefers-color-scheme` media query only — no JS toggle.
+
+## Running the app
+
+```bash
+npm install
+npm run dev    # tsx --watch server.ts, port 3000
+```
+
+## Key constraints
+
+- **No client-side JavaScript.** Schedule data must be fully computed and rendered server-side.
+- **No light/dark toggle.** Dark mode is handled entirely via the `prefers-color-scheme` CSS media query.
+- **No date picker.** The page renders a 52-week scrollable schedule; there is no interactive date picker.
+- **AI metadata must stay current.** The JSON-LD block, `<meta name="description">`, and the HTML comment summary are all generated dynamically from today's date — do not hardcode them.
+
+## TypeScript
+
+The project uses CommonJS modules (not ESM). `tsconfig.json` targets ES2022 and outputs to `dist/`. Run `npm run build` before `npm start` in production. In development, `tsx` runs `server.ts` directly without a compile step.
+
+## Schedule algorithm
+
+```
+anchor = Jan 10 2026 (Week B, Saturday)
+weeksDiff = (startOfWeek(queryDate) - startOfWeek(anchor)) / 7
+if weeksDiff is even → same week type as anchor (B)
+if weeksDiff is odd  → opposite week type (A)
+look up queryDate's day-of-week in the resolved week table
+```
+
+Dates are always normalized to local midnight before any arithmetic to avoid DST edge cases.

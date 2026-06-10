@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Is Aaron Free? — <%= todayFree ? 'Yes, Free Today' : 'No, Working Today' %></title>
+  <meta name="description" content="<%= metaDescription %>" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Is Aaron Free? — <%= todayFree ? 'Yes, Free Today' : 'No, Working Today' %>" />
+  <meta property="og:description" content="<%= metaDescription %>" />
+  <meta property="og:url" content="/" />
+
+  <!-- Machine-readable schedule for AI agents -->
+  <link rel="alternate" type="application/json" href="/schedule.json" title="Aaron's schedule (next 14 days, JSON)" />
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json"><%- jsonLd %></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!--
+    Aaron's availability summary (machine-readable):
+    Today (<%= todayIso %>): <%= todayFree ? 'FREE' : 'WORKING' %>
+    Upcoming 14 days:
+    <% upcomingDays.forEach(d => { %>
+    <%= d.date %> (<%= d.dayOfWeek %>): <%= d.status.toUpperCase() %>
+    <% }); %>
+    Full schedule API: /schedule.json
+  -->
+
+  <main class="app">
+    <header class="app-header">
+      <span class="app-title">Is Aaron Free?</span>
+    </header>
+
+    <!-- Today Banner -->
+    <section
+      class="today-banner <%= todayFree ? 'banner-free' : 'banner-working' %>"
+      role="status"
+      aria-live="polite"
+    >
+      <p class="today-eyebrow">Today · <%= todayDateStr %></p>
+      <p class="today-verdict"><%= todayFree ? 'Free' : 'Working' %></p>
+      <p class="today-subtext"><%= todayFree ? 'Aaron is available today' : 'Aaron is at work today' %></p>
+    </section>
+
+    <!-- 52-week schedule -->
+    <div class="weeks-list">
+      <% weeks.forEach(week => { %>
+        <% if (week.isNewMonth) { %>
+          <div class="month-header <%= week.isFirstMonth ? 'month-header--first' : '' %>">
+            <%= week.monthLabel %>
+          </div>
+        <% } %>
+        <div class="week-grid" role="list">
+          <% week.days.forEach(day => { %>
+            <div
+              role="listitem"
+              class="day-cell <%= day.free ? 'day-free' : 'day-working' %> <%= day.isToday ? 'day-today' : '' %>"
+              aria-label="<%= day.ariaLabel %>"
+              data-date="<%= day.isoDate %>"
+              data-status="<%= day.free ? 'free' : 'working' %>"
+            >
+              <span class="day-abbr" aria-hidden="true"><%= day.dayAbbr %></span>
+              <span class="day-init" aria-hidden="true"><%= day.dayInit %></span>
+              <span class="day-num"><%= day.dayNum %></span>
+            </div>
+          <% }); %>
+        </div>
+      <% }); %>
+    </div>
+  </main>
+</body>
+</html>
